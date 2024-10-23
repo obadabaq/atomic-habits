@@ -1,3 +1,5 @@
+import 'package:atomic_habits/core/router/routes_names.dart';
+import 'package:atomic_habits/features/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -6,6 +8,10 @@ class AppRouter {
     final args = value.arguments;
 
     switch (name) {
+      case RoutesNames.home:
+        return MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        );
       default:
         return _errorRoute();
     }
