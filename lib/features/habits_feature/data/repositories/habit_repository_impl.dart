@@ -13,4 +13,10 @@ class HabitRepositoryImpl extends AbstractHabitRepository {
   FunctionalFuture<Failure, List<HabitModel>> getHabits() async {
     return await _habitLocalDataSourceImpl.getHabits();
   }
+
+  @override
+  FunctionalFuture<Failure, List<HabitModel>> addHabit(
+      HabitModel habitModel) async {
+    return await _habitLocalDataSourceImpl.addHabit(habitModel);
+  }
 }

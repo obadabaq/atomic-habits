@@ -12,6 +12,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
 
   HabitBloc({required this.habitUseCase}) : super(HabitInitial()) {
     on<OnGettingHabitsEvent>(_onGettingHabitsEvent);
+    on<OnAddingHabitEvent>(_onAddingHabitsEvent);
   }
 
   _onGettingHabitsEvent(
@@ -19,6 +20,16 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     final result = await habitUseCase.call(
       NoParams(),
     );
+    result.fold((l) {
+      emitter(ErrorGetHabitsState(l.error));
+    }, (r) {
+      emitter(SuccessGetHabitsState(r));
+    });
+  }
+
+  _onAddingHabitsEvent(
+      OnAddingHabitEvent event, Emitter<HabitState> emitter) async {
+    final result = await habitUseCase.addHabit(event.habitModel);
     result.fold((l) {
       emitter(ErrorGetHabitsState(l.error));
     }, (r) {

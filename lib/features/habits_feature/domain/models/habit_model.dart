@@ -1,12 +1,12 @@
 class HabitModel {
   final String name;
   final String question;
-  bool value;
+  bool? value;
 
   HabitModel({
     required this.name,
     required this.question,
-    required this.value,
+    this.value,
   });
 
   factory HabitModel.fromJson(Map<String, dynamic> json) {
@@ -17,7 +17,7 @@ class HabitModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'name': name,
       'question': question,

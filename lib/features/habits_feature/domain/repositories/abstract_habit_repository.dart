@@ -4,4 +4,6 @@ import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.
 
 abstract class AbstractHabitRepository {
   FunctionalFuture<Failure, List<HabitModel>> getHabits();
+
+  FunctionalFuture<Failure, List<HabitModel>> addHabit(HabitModel habitModel);
 }

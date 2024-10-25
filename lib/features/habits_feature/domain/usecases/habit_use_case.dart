@@ -13,4 +13,8 @@ class HabitUseCase extends UseCase<List<HabitModel>, NoParams> {
   FunctionalFuture<Failure, List<HabitModel>> call(params) {
     return _abstractHabitRepository.getHabits();
   }
+
+  FunctionalFuture<Failure, List<HabitModel>> addHabit(HabitModel habitModel) {
+    return _abstractHabitRepository.addHabit(habitModel);
+  }
 }

@@ -27,7 +27,7 @@ class _HabitCardState extends State<HabitCard> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.w),
           decoration: BoxDecoration(
-            color: widget.habitModel.value
+            color: widget.habitModel.value!
                 ? CustomColors.accentColor
                 : CustomColors.neutralColor,
             borderRadius: BorderRadius.circular(12.sp),
@@ -58,7 +58,7 @@ class _HabitCardState extends State<HabitCard> {
 
   void _toggleColor() {
     setState(() {
-      widget.habitModel.value = !widget.habitModel.value;
+      widget.habitModel.value = !widget.habitModel.value!;
     });
   }
 }

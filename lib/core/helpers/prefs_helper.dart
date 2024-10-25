@@ -20,4 +20,15 @@ class PrefsHelper {
     final List<dynamic> habitsList = jsonDecode(habitsPref);
     return habitsList.map((item) => HabitModel.fromJson(item)).toList();
   }
+
+  List<HabitModel> addHabit(HabitModel habitModel) {
+    habitModel.value ??= false;
+    List<HabitModel> habits = getHabits();
+    habits.add(habitModel);
+
+    prefs.setString(
+        PrefsKeys.habits, jsonEncode(habits.map((h) => h.toJson()).toList()));
+
+    return habits;
+  }
 }
