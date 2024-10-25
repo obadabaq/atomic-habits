@@ -1,5 +1,8 @@
 import 'package:atomic_habits/core/constants/colors.dart';
+import 'package:atomic_habits/core/dependency_injection/locator.dart';
 import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
+import 'package:atomic_habits/features/habits_feature/domain/usecases/habit_use_case.dart';
+import 'package:atomic_habits/features/habits_feature/presentation/bloc/habit_bloc.dart';
 import 'package:atomic_habits/features/habits_feature/presentation/widgets/habit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,26 +19,12 @@ class _HabitsScreenState extends State<HabitsScreen> {
   late ThemeData theme;
   late String date;
 
-  List<HabitModel> habits = [
-    HabitModel(
-      name: "Running",
-      question: "did you run?",
-      value: false,
-    ),
-    HabitModel(
-      name: "Praying",
-      question: "did you pray 5 times?",
-      value: false,
-    ),
-    HabitModel(
-      name: "Wake up early",
-      question: "did you wake up early?",
-      value: false,
-    ),
-  ];
+  final HabitBloc _habitBloc = HabitBloc(habitUseCase: sl<HabitUseCase>());
+  List<HabitModel> habits = [];
 
   @override
   void initState() {
+    getHabits();
     date = DateFormat('yMMMMd').format(DateTime.now());
     super.initState();
   }
@@ -103,5 +92,9 @@ class _HabitsScreenState extends State<HabitsScreen> {
         ),
       ),
     );
+  }
+
+  getHabits() {
+    _habitBloc.add(const OnGettingHabitsEvent());
   }
 }
