@@ -30,9 +30,9 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
   @override
   void initState() {
-    super.initState();
     date = DateFormat('yMMMMd').format(DateTime.now());
     getHabits();
+    super.initState();
   }
 
   @override
@@ -45,7 +45,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
           habits = state.habits;
           return Scaffold(
             body: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 10.h),
               children: [
                 _buildHeader(),
                 _buildHabitGrid(),
@@ -84,6 +84,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
   Widget _buildHabitGrid() {
     return GridView.builder(
+      padding: EdgeInsets.only(top: 4.h),
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
