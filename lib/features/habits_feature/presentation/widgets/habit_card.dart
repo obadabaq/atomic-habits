@@ -34,7 +34,7 @@ class _HabitCardState extends State<HabitCard> {
           decoration: BoxDecoration(
             color: widget.submissionModel.value
                 ? CustomColors.accentColor
-                : CustomColors.neutralColor,
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12.sp),
           ),
           child: Column(
@@ -57,17 +57,19 @@ class _HabitCardState extends State<HabitCard> {
           child: TextScroll(
             widget.habitModel.name,
             style: widget.theme.textTheme.headlineLarge?.copyWith(
-              color: CustomColors.whiteColor,
+              color: widget.submissionModel.value
+                  ? CustomColors.whiteColor
+                  : CustomColors.blackColor,
             ),
           ),
         ),
-        IconButton(
-          onPressed: widget.onDelete,
-          icon: const Icon(
-            Icons.remove_circle_outline,
+        InkWell(
+          onTap: widget.onDelete,
+          child: const Icon(
+            Icons.cancel_outlined,
             color: CustomColors.redColor,
           ),
-        ),
+        )
       ],
     );
   }
@@ -78,7 +80,9 @@ class _HabitCardState extends State<HabitCard> {
       overflow: TextOverflow.ellipsis,
       maxLines: 3,
       style: widget.theme.textTheme.bodySmall?.copyWith(
-        color: CustomColors.whiteColor,
+        color: widget.submissionModel.value
+            ? CustomColors.whiteColor
+            : CustomColors.blackColor,
       ),
     );
   }

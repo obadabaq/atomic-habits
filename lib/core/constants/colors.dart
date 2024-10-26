@@ -7,5 +7,5 @@ class CustomColors {
   static const Color neutralColor = Color.fromRGBO(158, 158, 158, 1);
   static const Color blackColor = Color.fromRGBO(0, 0, 0, 1);
   static const Color whiteColor = Color.fromRGBO(255, 255, 255, 1);
-  static const Color redColor = Color.fromRGBO(255, 0, 0, 1);
+  static const Color redColor = Color.fromRGBO(255, 81, 81, 1.0);
 }
