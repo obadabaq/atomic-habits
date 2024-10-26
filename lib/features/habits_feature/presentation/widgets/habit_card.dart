@@ -1,17 +1,22 @@
 import 'package:atomic_habits/core/constants/colors.dart';
 import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
+import 'package:atomic_habits/features/habits_feature/domain/models/submission_model.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class HabitCard extends StatefulWidget {
   final HabitModel habitModel;
+  final SubmissionModel submissionModel;
   final ThemeData theme;
+  final VoidCallback onDelete;
 
   const HabitCard({
     Key? key,
     required this.theme,
     required this.habitModel,
+    required this.submissionModel,
+    required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -27,7 +32,7 @@ class _HabitCardState extends State<HabitCard> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.w),
           decoration: BoxDecoration(
-            color: widget.habitModel.value!
+            color: widget.submissionModel.value
                 ? CustomColors.accentColor
                 : CustomColors.neutralColor,
             borderRadius: BorderRadius.circular(12.sp),
@@ -35,20 +40,8 @@ class _HabitCardState extends State<HabitCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextScroll(
-                widget.habitModel.name,
-                style: widget.theme.textTheme.headlineLarge?.copyWith(
-                  color: CustomColors.whiteColor,
-                ),
-              ),
-              Text(
-                widget.habitModel.question,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                style: widget.theme.textTheme.bodySmall?.copyWith(
-                  color: CustomColors.whiteColor,
-                ),
-              ),
+              _buildHeader(),
+              _buildQuestionText(),
             ],
           ),
         ),
@@ -56,9 +49,43 @@ class _HabitCardState extends State<HabitCard> {
     );
   }
 
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: TextScroll(
+            widget.habitModel.name,
+            style: widget.theme.textTheme.headlineLarge?.copyWith(
+              color: CustomColors.whiteColor,
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: widget.onDelete,
+          icon: const Icon(
+            Icons.remove_circle_outline,
+            color: CustomColors.redColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuestionText() {
+    return Text(
+      widget.habitModel.question,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 3,
+      style: widget.theme.textTheme.bodySmall?.copyWith(
+        color: CustomColors.whiteColor,
+      ),
+    );
+  }
+
   void _toggleColor() {
     setState(() {
-      widget.habitModel.value = !widget.habitModel.value!;
+      widget.submissionModel.value = !widget.submissionModel.value;
     });
   }
 }

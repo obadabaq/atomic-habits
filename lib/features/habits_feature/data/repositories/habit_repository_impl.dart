@@ -19,4 +19,16 @@ class HabitRepositoryImpl extends AbstractHabitRepository {
       HabitModel habitModel) async {
     return await _habitLocalDataSourceImpl.addHabit(habitModel);
   }
+
+  @override
+  FunctionalFuture<Failure, List<HabitModel>> deleteHabit(
+      HabitModel habitModel) async {
+    return await _habitLocalDataSourceImpl.deleteHabit(habitModel);
+  }
+
+  @override
+  FunctionalFuture<Failure, List<HabitModel>> submitHabits(
+      List<HabitModel> submittedHabits) async {
+    return await _habitLocalDataSourceImpl.submitHabits(submittedHabits);
+  }
 }

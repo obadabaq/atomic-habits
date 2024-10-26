@@ -1,6 +1,7 @@
 import 'package:atomic_habits/core/constants/colors.dart';
 import 'package:atomic_habits/core/dependency_injection/locator.dart';
 import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
+import 'package:atomic_habits/features/habits_feature/domain/models/submission_model.dart';
 import 'package:atomic_habits/features/habits_feature/domain/usecases/habit_use_case.dart';
 import 'package:atomic_habits/features/habits_feature/presentation/bloc/habit_bloc.dart';
 import 'package:atomic_habits/features/habits_feature/presentation/widgets/habit_card.dart';
@@ -29,9 +30,9 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
   @override
   void initState() {
-    getHabits();
-    date = DateFormat('yMMMMd').format(DateTime.now());
     super.initState();
+    date = DateFormat('yMMMMd').format(DateTime.now());
+    getHabits();
   }
 
   @override
@@ -44,191 +45,78 @@ class _HabitsScreenState extends State<HabitsScreen> {
           habits = state.habits;
           return Scaffold(
             body: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
               children: [
-                Container(
-                  padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 3.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Today's Progress",
-                            style: theme.textTheme.headlineLarge,
-                          ),
-                          Text(
-                            date,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () {
-                          openAddHabitPopup();
-                        },
-                        child: Icon(
-                          Icons.add_circle,
-                          size: 24.sp,
-                          color: CustomColors.primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 3.h),
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.4,
-                    ),
-                    shrinkWrap: true,
-                    itemCount: habits.length,
-                    itemBuilder: (_, index) {
-                      return HabitCard(
-                        theme: theme,
-                        habitModel: habits[index],
-                      );
-                    },
-                  ),
-                ),
+                _buildHeader(),
+                _buildHabitGrid(),
               ],
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {},
-              child: Icon(
-                Icons.done,
-                size: 24.sp,
-              ),
+              onPressed: openSubmitPopup,
+              child: Icon(Icons.done, size: 24.sp),
             ),
           );
         }
-        return Scaffold(
-          body: ListView(
-            children: [
-              Container(
-                padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 3.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Today's Progress",
-                          style: theme.textTheme.headlineLarge,
-                        ),
-                        Text(
-                          date,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                    InkWell(
-                      onTap: () {
-                        openAddHabitPopup();
-                      },
-                      child: Icon(
-                        Icons.add_circle,
-                        size: 24.sp,
-                        color: CustomColors.primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 3.h),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.4,
-                  ),
-                  shrinkWrap: true,
-                  itemCount: habits.length,
-                  itemBuilder: (_, index) {
-                    return HabitCard(
-                      theme: theme,
-                      habitModel: habits[index],
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            child: Icon(
-              Icons.done,
-              size: 24.sp,
-            ),
-          ),
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Today's Progress", style: theme.textTheme.headlineLarge),
+            Text(date, style: theme.textTheme.bodySmall),
+          ],
+        ),
+        InkWell(
+          onTap: openAddHabitPopup,
+          child: Icon(Icons.add_circle,
+              size: 24.sp, color: CustomColors.primaryColor),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHabitGrid() {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.4,
+      ),
+      shrinkWrap: true,
+      itemCount: habits.length,
+      itemBuilder: (_, index) {
+        return HabitCard(
+          theme: theme,
+          habitModel: habits[index],
+          submissionModel: getTodaySubmission(habits[index]),
+          onDelete: () => deleteHabit(habits[index]),
         );
       },
     );
   }
 
-  openAddHabitPopup() {
+  void openAddHabitPopup() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: const Text('Add Habit'),
-          content: Form(
-            key: _formKey,
-            child: SizedBox(
-              height: 15.h,
-              width: 80.w,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      hintText: "e.g. Exercise",
-                      labelText: "Habit name",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: const BorderSide(
-                            color: CustomColors.neutralColor, width: 1.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 1.h,
-                  ),
-                  TextFormField(
-                    controller: _questionController,
-                    decoration: InputDecoration(
-                      hintText: "e.g. Did you exercise today?",
-                      labelText: "Habit question",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: const BorderSide(
-                            color: CustomColors.neutralColor, width: 1.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
+          content: _buildHabitForm(),
+          actions: [
             TextButton(
               child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
+              onPressed: addHabit,
               child: const Text('Add'),
-              onPressed: () {
-                addHabit();
-              },
             ),
           ],
         );
@@ -236,14 +124,95 @@ class _HabitsScreenState extends State<HabitsScreen> {
     );
   }
 
-  getHabits() {
+  Widget _buildHabitForm() {
+    return Form(
+      key: _formKey,
+      child: SizedBox(
+        height: 15.h,
+        width: 80.w,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTextField(_nameController, "Habit name", "e.g. Exercise"),
+            SizedBox(height: 1.h),
+            _buildTextField(_questionController, "Habit question",
+                "e.g. Did you exercise today?"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+      TextEditingController controller, String label, String hint) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hint,
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide:
+              const BorderSide(color: CustomColors.neutralColor, width: 1.0),
+        ),
+      ),
+    );
+  }
+
+  void openSubmitPopup() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Submit Habits'),
+          content:
+              const Text('Are you sure you want to submit today\'s progress?'),
+          actions: [
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              onPressed: submitHabits,
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void getHabits() {
     _habitBloc.add(const OnGettingHabitsEvent());
   }
 
-  addHabit() {
+  void addHabit() {
     HabitModel habitModel = HabitModel(
-        name: _nameController.text, question: _questionController.text);
+      name: _nameController.text,
+      question: _questionController.text,
+      submissions: [],
+    );
     _habitBloc.add(OnAddingHabitEvent(habitModel));
     Navigator.of(context).pop();
+  }
+
+  void deleteHabit(HabitModel habitModel) {
+    _habitBloc.add(OnDeletingHabitEvent(habitModel));
+  }
+
+  void submitHabits() {
+    _habitBloc.add(OnSubmittingHabitsEvent(habits));
+    Navigator.of(context).pop();
+  }
+
+  SubmissionModel getTodaySubmission(HabitModel habit) {
+    return habit.submissions.firstWhere(
+      (submission) => submission.date == date,
+      orElse: () {
+        SubmissionModel sub = SubmissionModel(value: false, date: date);
+        habit.submissions.add(sub);
+        return sub;
+      },
+    );
   }
 }

@@ -13,6 +13,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
   HabitBloc({required this.habitUseCase}) : super(HabitInitial()) {
     on<OnGettingHabitsEvent>(_onGettingHabitsEvent);
     on<OnAddingHabitEvent>(_onAddingHabitsEvent);
+    on<OnDeletingHabitEvent>(_onDeletingHabitsEvent);
+    on<OnSubmittingHabitsEvent>(_onSubmittingHabitsEvent);
   }
 
   _onGettingHabitsEvent(
@@ -34,6 +36,26 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       emitter(ErrorGetHabitsState(l.error));
     }, (r) {
       emitter(SuccessGetHabitsState(r));
+    });
+  }
+
+  _onDeletingHabitsEvent(
+      OnDeletingHabitEvent event, Emitter<HabitState> emitter) async {
+    final result = await habitUseCase.deleteHabit(event.habitModel);
+    result.fold((l) {
+      emitter(ErrorGetHabitsState(l.error));
+    }, (r) {
+      emitter(SuccessGetHabitsState(r));
+    });
+  }
+
+  _onSubmittingHabitsEvent(
+      OnSubmittingHabitsEvent event, Emitter<HabitState> emitter) async {
+    final result = await habitUseCase.submitHabits(event.submittedHabits);
+    result.fold((l) {
+      emitter(ErrorSubmitHabitsState(l.error));
+    }, (r) {
+      emitter(SuccessSubmitHabitsState(r));
     });
   }
 }

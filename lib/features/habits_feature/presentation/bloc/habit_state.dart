@@ -17,3 +17,15 @@ class ErrorGetHabitsState extends HabitState {
 
   ErrorGetHabitsState(this.error);
 }
+
+class SuccessSubmitHabitsState extends HabitState {
+  final List<HabitModel> habits;
+
+  SuccessSubmitHabitsState(this.habits);
+}
+
+class ErrorSubmitHabitsState extends HabitState {
+  final String error;
+
+  ErrorSubmitHabitsState(this.error);
+}

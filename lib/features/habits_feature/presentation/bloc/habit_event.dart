@@ -13,3 +13,15 @@ class OnAddingHabitEvent extends HabitEvent {
 
   const OnAddingHabitEvent(this.habitModel);
 }
+
+class OnDeletingHabitEvent extends HabitEvent {
+  final HabitModel habitModel;
+
+  const OnDeletingHabitEvent(this.habitModel);
+}
+
+class OnSubmittingHabitsEvent extends HabitEvent {
+  final List<HabitModel> submittedHabits;
+
+  const OnSubmittingHabitsEvent(this.submittedHabits);
+}

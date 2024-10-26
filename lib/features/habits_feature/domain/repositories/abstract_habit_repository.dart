@@ -6,4 +6,10 @@ abstract class AbstractHabitRepository {
   FunctionalFuture<Failure, List<HabitModel>> getHabits();
 
   FunctionalFuture<Failure, List<HabitModel>> addHabit(HabitModel habitModel);
+
+  FunctionalFuture<Failure, List<HabitModel>> deleteHabit(
+      HabitModel habitModel);
+
+  FunctionalFuture<Failure, List<HabitModel>> submitHabits(
+      List<HabitModel> submittedHabits);
 }
