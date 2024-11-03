@@ -1,3 +1,4 @@
+import 'package:atomic_habits/core/dependency_injection/features/food_di.dart';
 import 'package:atomic_habits/core/dependency_injection/features/habits_di.dart';
 import 'package:atomic_habits/core/helpers/prefs_helper.dart';
 import 'package:atomic_habits/core/router/app_router.dart';
@@ -17,4 +18,5 @@ Future<void> initDependencyInjection() async {
 
   /// Features (Blocs, Repos and Data Sources)
   initHabitFeature(sl);
+  initFoodFeature(sl);
 }

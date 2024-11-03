@@ -1,5 +1,6 @@
 import 'package:atomic_habits/core/constants/colors.dart';
 import 'package:atomic_habits/core/dependency_injection/locator.dart';
+import 'package:atomic_habits/core/widgets/custom_text_field.dart';
 import 'package:atomic_habits/features/habits_feature/domain/models/habit_model.dart';
 import 'package:atomic_habits/features/habits_feature/domain/models/submission_model.dart';
 import 'package:atomic_habits/features/habits_feature/domain/usecases/habit_use_case.dart';
@@ -134,27 +135,18 @@ class _HabitsScreenState extends State<HabitsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTextField(_nameController, "Habit name", "e.g. Exercise"),
+            CustomTextField(
+              controller: _nameController,
+              label: "Habit name",
+              hint: "e.g. Exercise",
+            ),
             SizedBox(height: 1.h),
-            _buildTextField(_questionController, "Habit question",
-                "e.g. Did you exercise today?"),
+            CustomTextField(
+              controller: _questionController,
+              label: "Habit question",
+              hint: "e.g. Did you exercise today?",
+            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-      TextEditingController controller, String label, String hint) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hint,
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide:
-              const BorderSide(color: CustomColors.neutralColor, width: 1.0),
         ),
       ),
     );
